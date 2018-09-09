@@ -22,9 +22,4 @@ public class SwaggerConfig {
                 .build();
     }
 
-    @Bean
-    public CascadingMongoEventListener cascadingMongoEventListener(){
-        return new CascadingMongoEventListener();
-    }
-
 }
