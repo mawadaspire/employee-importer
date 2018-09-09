@@ -2,13 +2,12 @@ package jo.aspire.task.dao;
 
 import jo.aspire.task.dto.EmployeeDTO;
 import jo.aspire.task.repository.JPAEmployeeRepository;
-import jo.aspire.task.entities.EmployeeEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Qualifier("rdbms")
@@ -22,13 +21,43 @@ public class JPAEmployeeDAO implements EmployeeDAO {
     }
 
     @Override
-    public EmployeeDTO save(EmployeeDTO employee) {
+    public Optional<EmployeeDTO> save(EmployeeDTO employee) {
         return null;
     }
 
     @Override
-    public List<EmployeeDTO> findAll() {
+    public Optional<List<EmployeeDTO>> findAll(int pageNumber, int pageSize) {
        return null;
+    }
+
+    @Override
+    public Optional<EmployeeDTO> findByEmployeeId(long employeeId) {
+        return null;
+    }
+
+    @Override
+    public Optional<EmployeeDTO> findByEmployeeName(String employeeName) {
+        return null;
+    }
+
+    @Override
+    public Optional<List<EmployeeDTO>> findByDegree(String degree) {
+        return null;
+    }
+
+    @Override
+    public Optional<List<EmployeeDTO>> findByStatus(String status) {
+        return null;
+    }
+
+    @Override
+    public Optional<Double> getYearlySalary(long employeeId) {
+        return null;
+    }
+
+    @Override
+    public  Optional<Long> getAgeById(long employeeId) {
+        return null;
     }
 
 }

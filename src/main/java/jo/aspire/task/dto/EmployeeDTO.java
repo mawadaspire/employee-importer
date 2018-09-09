@@ -2,6 +2,8 @@ package jo.aspire.task.dto;
 
 import com.opencsv.bean.CsvBindByPosition;
 
+import java.util.List;
+
 public class EmployeeDTO {
 
     @CsvBindByPosition(position = 0)
@@ -18,6 +20,8 @@ public class EmployeeDTO {
     private String Degree;
     @CsvBindByPosition(position = 6)
     private String address;
+    private List<String> addressesList;
+
 
     public long getEmployeeId() {
         return employeeId;
@@ -73,6 +77,14 @@ public class EmployeeDTO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List<String> getAddressesList() {
+        return addressesList;
+    }
+
+    public void setAddressesList(List<String> addressesList) {
+        this.addressesList = addressesList;
     }
 
     @Override

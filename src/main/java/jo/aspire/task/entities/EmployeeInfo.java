@@ -10,7 +10,7 @@ public class EmployeeInfo {
     private double salary;
     private String status;
     private String birthDate;
-    private String Degree;
+    private String degree;
     private String address;
 
     public long getEmployeeId() {
@@ -54,11 +54,11 @@ public class EmployeeInfo {
     }
 
     public String getDegree() {
-        return Degree;
+        return degree;
     }
 
     public void setDegree(String degree) {
-        Degree = degree;
+        this.degree = degree;
     }
 
     public String getAddress() {

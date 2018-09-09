@@ -9,7 +9,10 @@ import jo.aspire.task.entities.EmployeeInfo;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 @Component
 public class OpenCSVFileReader implements CsvFileReader {
@@ -26,6 +29,7 @@ public class OpenCSVFileReader implements CsvFileReader {
             Observable<Object> observable = Observable.create(sub -> {
                 Iterator<EmployeeDTO> iterator = csvToBean.iterator();
                 iterator.forEachRemaining(employeeInfo -> {
+                    employeeInfo.setAddressesList(createAddressesList(employeeInfo.getAddress()));
                     sub.onNext(employeeInfo);
                 });
                 if (!iterator.hasNext())
@@ -36,5 +40,11 @@ public class OpenCSVFileReader implements CsvFileReader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private List<String> createAddressesList(String address) {
+        String strippedString=address.substring(1,address.length()-1);
+        String[] addresses = strippedString.split("-");
+        return  Arrays.asList(addresses);
     }
 }

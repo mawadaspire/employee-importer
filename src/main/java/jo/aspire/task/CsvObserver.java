@@ -2,6 +2,7 @@ package jo.aspire.task;
 
 import io.reactivex.observers.DefaultObserver;
 import jo.aspire.task.dao.EmployeeDAO;
+import jo.aspire.task.dto.EmployeeDTO;
 import jo.aspire.task.entities.EmployeeInfo;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +17,8 @@ public class CsvObserver extends DefaultObserver {
 
     @Override
     public void onNext(Object o) {
-        EmployeeInfo employeeInfo = (EmployeeInfo) o;
-//        mongoEmployeeDAO.save(employeeInfo);
+        EmployeeDTO employeeInfo = (EmployeeDTO) o;
+       mongoEmployeeDAO.save(employeeInfo);
     }
 
     @Override
