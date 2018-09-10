@@ -1,6 +1,6 @@
 package jo.aspire.task.config;
 
-import jo.aspire.task.AppController;
+import jo.aspire.task.controller.AppController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -21,5 +21,4 @@ public class SwaggerConfig {
                 .paths(regex("/api.*"))
                 .build();
     }
-
 }

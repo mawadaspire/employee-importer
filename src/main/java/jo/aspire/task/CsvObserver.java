@@ -3,13 +3,17 @@ package jo.aspire.task;
 import io.reactivex.observers.DefaultObserver;
 import jo.aspire.task.dao.EmployeeDAO;
 import jo.aspire.task.dto.EmployeeDTO;
-import jo.aspire.task.entities.EmployeeInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 
 @Component
 public class CsvObserver extends DefaultObserver {
     private final EmployeeDAO mongoEmployeeDAO;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CsvObserver.class);
+
 
     public CsvObserver(EmployeeDAO mongoEmployeeDAO) {
         this.mongoEmployeeDAO = mongoEmployeeDAO;
@@ -18,16 +22,16 @@ public class CsvObserver extends DefaultObserver {
     @Override
     public void onNext(Object o) {
         EmployeeDTO employeeInfo = (EmployeeDTO) o;
-       mongoEmployeeDAO.save(employeeInfo);
+        mongoEmployeeDAO.save(employeeInfo);
     }
 
     @Override
     public void onError(Throwable e) {
-        System.out.println("e = " + e);
+        LOGGER.error("Error While Receiving data from obserable with error" + e.getMessage());
     }
 
     @Override
     public void onComplete() {
-        System.out.println("onComplete");
+        LOGGER.info("finish to receive data from observable");
     }
 }

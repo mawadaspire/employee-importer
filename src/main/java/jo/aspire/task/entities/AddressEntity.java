@@ -1,31 +1,32 @@
 package jo.aspire.task.entities;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Objects;
 
-@Document(collection = "address")
-public class AddressDocument {
+@Entity
+public class AddressEntity {
+
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
     private String address;
 
-
-    public AddressDocument() {
+    public AddressEntity() {
     }
 
-    public AddressDocument( String address) {
-
+    public AddressEntity(String address) {
         this.address = address;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -40,10 +41,9 @@ public class AddressDocument {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AddressDocument)) return false;
-        AddressDocument that = (AddressDocument) o;
-        return Objects.equals(getId(), that.getId()) &&
-
+        if (!(o instanceof AddressEntity)) return false;
+        AddressEntity that = (AddressEntity) o;
+        return getId() == that.getId() &&
                 Objects.equals(getAddress(), that.getAddress());
     }
 

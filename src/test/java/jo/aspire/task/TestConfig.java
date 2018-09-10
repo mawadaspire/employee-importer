@@ -9,10 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class TestConfig {
 
-//    @Bean
-//    public TestRestTemplate testRestTemplate(){
-//        return new TestRestTemplate();
-//    }
     @Bean
     public ServletWebServerFactory servletWebServerFactory(){
         return new TomcatServletWebServerFactory();
