@@ -112,8 +112,6 @@ public class AppControllerTest {
     @Test
     public void givenEmployeeInfoFileWhenUploadThenDocumentsShouldBeInserted() throws Exception {
         insertData(createFile(TEST_CSV));
-
-
         Awaitility.await().until(() -> mongoEmployeeRepository.findAll().size(), equalTo(SIZE));
         List<EmployeeDocument> all = mongoEmployeeRepository.findAll();
         assertEquals(SIZE, all.size());

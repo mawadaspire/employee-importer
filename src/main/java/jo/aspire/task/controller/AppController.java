@@ -2,6 +2,7 @@ package jo.aspire.task.controller;
 
 
 import jo.aspire.task.CsvObserver;
+import jo.aspire.task.SendEmail;
 import jo.aspire.task.dao.EmployeeDAO;
 import jo.aspire.task.dao.JsonFileDAO;
 import jo.aspire.task.dao.TextFileDAO;
@@ -51,6 +52,9 @@ public class AppController {
 
     @Autowired
     private DataMigrater dataMigrater;
+
+    @Autowired
+    private SendEmail sendEmail;
 
 
     // TODO: 9/10/18 i'am for testing purpose only so remove me
@@ -110,7 +114,7 @@ public class AppController {
 
     private void handleCsvFile(File file) {
         try {
-            csvFileReader.employees(file, new CsvObserver(mongoEmployeeDAO));
+            csvFileReader.employees(file, new CsvObserver(mongoEmployeeDAO,sendEmail));
         }  catch (InterruptedException e) {
             e.printStackTrace();
         }

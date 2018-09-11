@@ -4,6 +4,7 @@ import jo.aspire.task.entities.AddressDocument;
 import jo.aspire.task.entities.AddressEntity;
 import jo.aspire.task.entities.EmployeeDocument;
 import jo.aspire.task.entities.EmployeeEntity;
+import jo.aspire.task.exception.MigrateDataFailedException;
 import jo.aspire.task.repository.JPAEmployeeRepository;
 import jo.aspire.task.repository.MongoAddressRepository;
 import jo.aspire.task.repository.MongoEmployeeRepository;
@@ -112,6 +113,8 @@ public class MongoToMysqlMigrater implements DataMigrater {
         if (dataMoved.get() == mongoDataSize) {
             mongoEmployeeRepository.deleteAll();
             mongoAddressRepository.deleteAll();
+        }else{
+            throw new MigrateDataFailedException("Migrating Data From MongoDB to MySQL Failed");
         }
 
     }
