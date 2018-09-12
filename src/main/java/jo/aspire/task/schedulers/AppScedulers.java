@@ -18,7 +18,16 @@ public class AppScedulers {
     private static final Logger LOGGER = LoggerFactory.getLogger(AppScedulers.class);
 
     @Autowired
+    @Qualifier("dailyMigrater")
     private DataMigrater dataMigrater;
+
+
+
+
+    @Autowired
+    @Qualifier("failedItems")
+    private DataMigrater failedItems;
+
 
     @Autowired
     @Qualifier("mongo")
@@ -31,10 +40,16 @@ public class AppScedulers {
 
 
     @Scheduled(cron = "0 0 0 * * ?")
-    public void reportCurrentTime() {
+    public void migrateEveryMidNight() {
         LOGGER.info("starting migrating data at " + LocalDateTime.now().toString());
         dataMigrater.migrate(fromEmployeeDAO,toEmployeeDAO);
         LOGGER.info("finished migrating data at " + LocalDateTime.now().toString());
+    }
 
+    @Scheduled(cron = "0 0 */1 * * *")
+    public void migrateFailedItemsEveryHour() {
+        LOGGER.info("starting migrating Failed data at " + LocalDateTime.now().toString());
+        failedItems.migrate(fromEmployeeDAO,toEmployeeDAO);
+        LOGGER.info("finished migrating Failed data at " + LocalDateTime.now().toString());
     }
 }

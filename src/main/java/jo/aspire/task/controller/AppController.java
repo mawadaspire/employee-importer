@@ -51,6 +51,7 @@ public class AppController {
     private JsonFileDAO jsonFileDAO;
 
     @Autowired
+    @Qualifier("dailyMigrater")
     private DataMigrater dataMigrater;
 
     @Autowired

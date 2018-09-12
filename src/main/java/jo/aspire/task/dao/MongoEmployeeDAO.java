@@ -81,6 +81,8 @@ public class MongoEmployeeDAO implements EmployeeDAO {
             List<EmployeeDocument> employeeDocuments = all.stream().filter(e -> !e.isMigrated()).collect(Collectors.toList());
             List<EmployeeDTO> result = new ArrayList<>();
             employeeDocuments.forEach(emp -> result.add(createDTO(emp)));
+            if (result.isEmpty())
+                return Optional.empty();
             return Optional.of(result);
         }
         return Optional.empty();

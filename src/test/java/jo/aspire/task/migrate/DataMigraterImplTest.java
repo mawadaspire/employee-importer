@@ -53,6 +53,7 @@ public class DataMigraterImplTest {
     private MongoAddressRepository mongoAddressRepository;
 
     @Autowired
+    @Qualifier("dailyMigrater")
     private DataMigrater dataMigrater;
 
 
