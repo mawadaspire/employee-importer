@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @Qualifier("rdbms")
@@ -64,10 +65,14 @@ public class JPAEmployeeDAO implements EmployeeDAO {
     }
 
     @Override
-    public Optional<List<EmployeeDTO>> findAll() {
+    public Optional<List<EmployeeDTO>> findNotMigratedRecords() {
         List<EmployeeEntity> all = jpaEmployeeRepository.findAll();
+        List<EmployeeEntity> collect = new ArrayList<>();
+        if (!all.isEmpty()) {
+            collect.addAll(all.stream().filter(e -> !e.isMigrated()).collect(Collectors.toList()));
+        }
         List<EmployeeDTO> employeeDTOS = new ArrayList<>();
-        all.forEach(e -> employeeDTOS.add(createDTO(e)));
+        collect.forEach(e -> employeeDTOS.add(createDTO(e)));
         if (!employeeDTOS.isEmpty())
             return Optional.of(employeeDTOS);
         return Optional.empty();
@@ -128,6 +133,11 @@ public class JPAEmployeeDAO implements EmployeeDAO {
 
     @Override
     public Optional<Long> getAgeById(long employeeId) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void updateIsMigrated(boolean b, long employeeId) {
         throw new UnsupportedOperationException();
     }
 

@@ -27,6 +27,15 @@ public class EmployeeEntity {
     private String status;
     private String birthDate;
     private String degree;
+    private boolean isMigrated;
+
+    public boolean isMigrated() {
+        return isMigrated;
+    }
+
+    public void setMigrated(boolean migrated) {
+        isMigrated = migrated;
+    }
 
     public long getId() {
         return id;

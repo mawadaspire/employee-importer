@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
@@ -74,11 +75,12 @@ public class MongoEmployeeDAO implements EmployeeDAO {
     }
 
     @Override
-    public Optional<List<EmployeeDTO>> findAll() {
+    public Optional<List<EmployeeDTO>> findNotMigratedRecords() {
         List<EmployeeDocument> all = mongoEmployeeRepository.findAll();
         if (Objects.nonNull(all) && !all.isEmpty()) {
+            List<EmployeeDocument> employeeDocuments = all.stream().filter(e -> !e.isMigrated()).collect(Collectors.toList());
             List<EmployeeDTO> result = new ArrayList<>();
-           all.forEach(emp -> result.add(createDTO(emp)));
+            employeeDocuments.forEach(emp -> result.add(createDTO(emp)));
             return Optional.of(result);
         }
         return Optional.empty();
@@ -152,7 +154,7 @@ public class MongoEmployeeDAO implements EmployeeDAO {
         BigDecimal salary = BigDecimal.valueOf(employeeDocument.getSalary());
         if (isMarried(employeeDocument) && isMasterDegree(employeeDocument))
             salary = salary.add(salary.multiply(BigDecimal.valueOf(0.05)));
-    else    if (isMarried(employeeDocument) && (isMasterDegree(employeeDocument) || isDoctorDegree(employeeDocument) || isProfessorDegreee(employeeDocument)))
+        else if (isMarried(employeeDocument) && (isMasterDegree(employeeDocument) || isDoctorDegree(employeeDocument) || isProfessorDegreee(employeeDocument)))
             salary = salary.add(salary.multiply(BigDecimal.valueOf(0.10)));
 
         return salary.doubleValue();
@@ -181,6 +183,11 @@ public class MongoEmployeeDAO implements EmployeeDAO {
         if (Objects.nonNull(byEmployeeId))
             return Optional.of(calculateAge(byEmployeeId));
         return Optional.empty();
+    }
+
+    @Override
+    public void updateIsMigrated(boolean isMigrated, long employeeId) {
+        mongoEmployeeRepository.updateEmployeeIsMigrated(isMigrated, employeeId);
     }
 
     private long calculateAge(EmployeeDocument byEmployeeId) {

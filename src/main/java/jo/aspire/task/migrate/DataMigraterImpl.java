@@ -28,15 +28,15 @@ public class DataMigraterImpl implements DataMigrater {
 
     @Override
     public void migrate(EmployeeDAO from, EmployeeDAO to) {
-        Optional<List<EmployeeDTO>> allDocuments = from.findAll();
-        allDocuments.ifPresent(employeeDTOS -> moveToMysql(employeeDTOS, to));
+        Optional<List<EmployeeDTO>> allDocuments = from.findNotMigratedRecords();
+        allDocuments.ifPresent(employeeDTOS -> moveToMysql(employeeDTOS, from, to));
     }
 
-    private void moveToMysql(List<EmployeeDTO> allDocuments, EmployeeDAO to) {
+    private void moveToMysql(List<EmployeeDTO> allDocuments, EmployeeDAO from, EmployeeDAO to) {
         Spliterator<EmployeeDTO> firstHalf = allDocuments.spliterator();
         Spliterator<EmployeeDTO> secondHalf = firstHalf.trySplit();
-        Runnable firstHalfRunnable = () -> moveData(firstHalf, to);
-        Runnable secondHalfRunnable = () -> moveData(secondHalf, to);
+        Runnable firstHalfRunnable = () -> moveData(firstHalf, from, to);
+        Runnable secondHalfRunnable = () -> moveData(secondHalf, from, to);
         LOGGER.info("Starting migrating " + allDocuments.size() + " Documents To MYSQL");
         new Thread(firstHalfRunnable).start();
         new Thread(secondHalfRunnable).start();
@@ -44,23 +44,33 @@ public class DataMigraterImpl implements DataMigrater {
     }
 
 
-    private void moveData(Spliterator<EmployeeDTO> data, EmployeeDAO to) {
-        data.forEachRemaining(record -> {
-            try {
-                Optional<EmployeeDTO> save = to.save(record);
-                if (Objects.nonNull(save))
-                    dataMoved.incrementAndGet();
-                else {
+    private void moveData(Spliterator<EmployeeDTO> data, EmployeeDAO from, EmployeeDAO to) {
+        if (Objects.nonNull(data) && data.getExactSizeIfKnown() > 0) {
+            data.forEachRemaining(record -> {
+                try {
+                    Optional<EmployeeDTO> save = to.save(record);
+                    if (Objects.nonNull(save)) {
+                        dataMoved.incrementAndGet();
+                        markRecordAsMigrated(from, record.getEmployeeId());
+                    } else {
+                        LOGGER.error("Error While Migrating " + record.toString());
+                        FailedEmployees byEmployeeData = failedEmployeeRepository.findByEmployeeData(record.toString());
+                        if (Objects.isNull(byEmployeeData))
+                            failedEmployeeRepository.save(new FailedEmployees(record.toString()));
+                    }
+                } catch (Exception e) {
                     LOGGER.error("Error While Migrating " + record.toString());
-                    failedEmployeeRepository.save(new FailedEmployees(record.toString()));
+                    FailedEmployees byEmployeeData = failedEmployeeRepository.findByEmployeeData(record.toString());
+                    if (Objects.isNull(byEmployeeData))
+                        failedEmployeeRepository.save(new FailedEmployees(record.toString()));
+
                 }
-            } catch (Exception e) {
-                LOGGER.error("Error While Migrating " + record.toString());
-                failedEmployeeRepository.save(new FailedEmployees(record.toString()));
+            });
+        }
+    }
 
-            }
+    private void markRecordAsMigrated(EmployeeDAO from, long employeeId) {
+        from.updateIsMigrated(true, employeeId);
 
-
-        });
     }
 }

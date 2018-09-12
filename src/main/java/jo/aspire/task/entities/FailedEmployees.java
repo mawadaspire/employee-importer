@@ -12,13 +12,13 @@ public class FailedEmployees {
     private long id;
 
     @Lob
-    private String employee;
+    private String employeeData;
 
     public FailedEmployees() {
     }
 
-    public FailedEmployees(String employee) {
-        this.employee = employee;
+    public FailedEmployees(String employeeData) {
+        this.employeeData = employeeData;
     }
 
     public long getId() {
@@ -29,12 +29,12 @@ public class FailedEmployees {
         this.id = id;
     }
 
-    public String getEmployee() {
-        return employee;
+    public String getEmployeeData() {
+        return employeeData;
     }
 
-    public void setEmployee(String employee) {
-        this.employee = employee;
+    public void setEmployeeData(String employeeData) {
+        this.employeeData = employeeData;
     }
 
     @Override
@@ -43,11 +43,11 @@ public class FailedEmployees {
         if (!(o instanceof FailedEmployees)) return false;
         FailedEmployees that = (FailedEmployees) o;
         return getId() == that.getId() &&
-                Objects.equals(getEmployee(), that.getEmployee());
+                Objects.equals(getEmployeeData(), that.getEmployeeData());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getEmployee());
+        return Objects.hash(getId(), getEmployeeData());
     }
 }

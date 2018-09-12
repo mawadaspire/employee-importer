@@ -15,7 +15,7 @@ public interface EmployeeDAO {
 
     Optional<List<EmployeeDTO>> findAll(int pageNumber, int pageSize);
 
-    Optional<List<EmployeeDTO>> findAll();
+    Optional<List<EmployeeDTO>> findNotMigratedRecords();
 
     Optional<List<DownloadFileData>> findAllToDownload();
 
@@ -31,4 +31,5 @@ public interface EmployeeDAO {
 
     Optional<Long> getAgeById(long employeeId);
 
+    void updateIsMigrated(boolean b, long employeeId);
 }

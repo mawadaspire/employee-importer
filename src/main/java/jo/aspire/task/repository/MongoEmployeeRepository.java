@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MongoEmployeeRepository extends MongoRepository<EmployeeDocument, String> {
+public interface MongoEmployeeRepository extends MongoRepository<EmployeeDocument, String>, EmployeeRepositoryMigrated {
 
     EmployeeDocument findByEmployeeId(long employeeId);
 
@@ -16,4 +16,6 @@ public interface MongoEmployeeRepository extends MongoRepository<EmployeeDocumen
     List<EmployeeDocument> findByDegree(String degree);
 
     List<EmployeeDocument> findByStatus(String status);
+
+
 }

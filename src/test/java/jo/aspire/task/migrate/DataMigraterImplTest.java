@@ -29,6 +29,7 @@ import java.util.stream.StreamSupport;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -75,12 +76,15 @@ public class DataMigraterImplTest {
         List<EmployeeDocument> employeeDocuments = insertDocuments(5);
         mongoEmployeeRepository.saveAll(employeeDocuments);
         dataMigrater.migrate(fromEmployeeDao, toEmployeeDao);
-        Awaitility.await().until(() -> toEmployeeDao.findAll().get().size(), equalTo(5));
-        List<EmployeeDTO> all = toEmployeeDao.findAll().get();
+        Awaitility.await().until(() -> toEmployeeDao.findNotMigratedRecords().get().size(), equalTo(5));
+        List<EmployeeDTO> all = toEmployeeDao.findNotMigratedRecords().get();
         assertEquals(5, all.size());
-        assertEquals(5, fromEmployeeDao.findAll().get().size());
-        assertEquals(5, toEmployeeDao.findAll().get().size());
+        assertEquals(0, fromEmployeeDao.findNotMigratedRecords().get().size());
+        assertEquals(5, toEmployeeDao.findNotMigratedRecords().get().size());
         assertFalse(failedEmployeeRepository.findAll().iterator().hasNext());
+        mongoEmployeeRepository.findAll().forEach(e->{
+            assertTrue(e.isMigrated());
+        });
     }
 
 
@@ -92,11 +96,11 @@ public class DataMigraterImplTest {
         employeeDocuments.add(employeeDocument);
         mongoEmployeeRepository.saveAll(employeeDocuments);
         dataMigrater.migrate(fromEmployeeDao, toEmployeeDao);
-        Awaitility.await().until(() -> toEmployeeDao.findAll().get().size(), equalTo(5));
-        List<EmployeeDTO> all = toEmployeeDao.findAll().get();
+        Awaitility.await().until(() -> toEmployeeDao.findNotMigratedRecords().get().size(), equalTo(5));
+        List<EmployeeDTO> all = toEmployeeDao.findNotMigratedRecords().get();
         assertEquals(5, all.size());
-        assertEquals(6, fromEmployeeDao.findAll().get().size());
-        assertEquals(5, toEmployeeDao.findAll().get().size());
+        assertEquals(1, fromEmployeeDao.findNotMigratedRecords().get().size());
+        assertEquals(5, toEmployeeDao.findNotMigratedRecords().get().size());
         long count = StreamSupport.stream(failedEmployeeRepository.findAll().spliterator(), false).count();
         assertEquals(1, count);
     }
