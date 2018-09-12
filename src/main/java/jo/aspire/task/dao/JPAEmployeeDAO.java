@@ -11,10 +11,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
 @Qualifier("rdbms")
+
 public class JPAEmployeeDAO implements EmployeeDAO {
 
     @Autowired
@@ -27,7 +29,28 @@ public class JPAEmployeeDAO implements EmployeeDAO {
 
     @Override
     public Optional<EmployeeDTO> save(EmployeeDTO employee) {
-        throw new UnsupportedOperationException();
+        EmployeeEntity save = jpaEmployeeRepository.save(createEntity(employee));
+        if (Objects.nonNull(save))
+            return Optional.of(createDTO(save));
+        return Optional.empty();
+    }
+
+    private EmployeeEntity createEntity(EmployeeDTO employee) {
+        EmployeeEntity result = new EmployeeEntity();
+        result.setStatus(employee.getStatus());
+        result.setSalary(employee.getSalary());
+        result.setEmployeeName(employee.getEmployeeName());
+        result.setEmployeeId(employee.getEmployeeId());
+        result.setDegree(employee.getDegree());
+        result.setBirthDate(employee.getBirthDate());
+        result.setAddressEntities(createAddresses(employee.getAddressesList()));
+        return result;
+    }
+
+    private List<AddressEntity> createAddresses(List<String> addressesList) {
+        List<AddressEntity> result = new ArrayList<>();
+        addressesList.forEach(a -> result.add(new AddressEntity(a)));
+        return result;
     }
 
     @Override
@@ -41,10 +64,20 @@ public class JPAEmployeeDAO implements EmployeeDAO {
     }
 
     @Override
+    public Optional<List<EmployeeDTO>> findAll() {
+        List<EmployeeEntity> all = jpaEmployeeRepository.findAll();
+        List<EmployeeDTO> employeeDTOS = new ArrayList<>();
+        all.forEach(e -> employeeDTOS.add(createDTO(e)));
+        if (!employeeDTOS.isEmpty())
+            return Optional.of(employeeDTOS);
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<List<DownloadFileData>> findAllToDownload() {
         List<EmployeeEntity> employeesList = jpaEmployeeRepository.findAll();
         List<DownloadFileData> employeeToDownload = new ArrayList<>();
-        employeesList.forEach(e -> employeeToDownload.add(new DownloadFileData(e.getEmployeeName(),e.getSalary(),e.getSalary()*12)));
+        employeesList.forEach(e -> employeeToDownload.add(new DownloadFileData(e.getEmployeeName(), e.getSalary(), e.getSalary() * 12)));
         if (!employeeToDownload.isEmpty())
             return Optional.of(employeeToDownload);
         return Optional.empty();

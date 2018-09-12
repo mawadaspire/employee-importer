@@ -74,6 +74,17 @@ public class MongoEmployeeDAO implements EmployeeDAO {
     }
 
     @Override
+    public Optional<List<EmployeeDTO>> findAll() {
+        List<EmployeeDocument> all = mongoEmployeeRepository.findAll();
+        if (Objects.nonNull(all) && !all.isEmpty()) {
+            List<EmployeeDTO> result = new ArrayList<>();
+           all.forEach(emp -> result.add(createDTO(emp)));
+            return Optional.of(result);
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<List<DownloadFileData>> findAllToDownload() {
         throw new UnsupportedOperationException();
     }

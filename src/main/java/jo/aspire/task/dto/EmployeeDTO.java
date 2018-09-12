@@ -22,7 +22,6 @@ public class EmployeeDTO {
     private String address;
     private List<String> addressesList;
 
-
     public long getEmployeeId() {
         return employeeId;
     }
@@ -96,7 +95,7 @@ public class EmployeeDTO {
                 ", status='" + status + '\'' +
                 ", birthDate='" + birthDate + '\'' +
                 ", Degree='" + Degree + '\'' +
-                ", address='" + address + '\'' +
+                ", address='" + addressesList + '\'' +
                 '}';
     }
 }

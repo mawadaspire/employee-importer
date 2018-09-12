@@ -60,7 +60,7 @@ public class AppController {
     // TODO: 9/10/18 i'am for testing purpose only so remove me
     @GetMapping("/migrate")
     public void migrate(){
-        dataMigrater.migrate();
+        dataMigrater.migrate(mongoEmployeeDAO,rdbmsEmployeeDAO);
     }
 
 

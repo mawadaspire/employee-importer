@@ -15,6 +15,8 @@ public interface EmployeeDAO {
 
     Optional<List<EmployeeDTO>> findAll(int pageNumber, int pageSize);
 
+    Optional<List<EmployeeDTO>> findAll();
+
     Optional<List<DownloadFileData>> findAllToDownload();
 
     Optional<EmployeeDTO> findByEmployeeId(long employeeId);

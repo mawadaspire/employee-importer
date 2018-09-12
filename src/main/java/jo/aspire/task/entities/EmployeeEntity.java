@@ -6,19 +6,22 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class EmployeeEntity  {
+//@Table(schema = "employees")
+public class EmployeeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @OneToMany(
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
     )
-    List<AddressEntity>addressEntities;
+    List<AddressEntity> addressEntities;
 
     private long employeeId;
+    @Column(unique = true)
     private String employeeName;
     private double salary;
     private String status;
@@ -107,5 +110,19 @@ public class EmployeeEntity  {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getAddressEntities(), getEmployeeId(), getEmployeeName(), getSalary(), getStatus(), getBirthDate(), getDegree());
+    }
+
+    @Override
+    public String toString() {
+        return "EmployeeEntity{" +
+                "id=" + id +
+                ", addressEntities=" + addressEntities +
+                ", employeeId=" + employeeId +
+                ", employeeName='" + employeeName + '\'' +
+                ", salary=" + salary +
+                ", status='" + status + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                ", degree='" + degree + '\'' +
+                '}';
     }
 }
